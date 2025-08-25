@@ -4,7 +4,7 @@ function EntryList({ entries }) {
   if (entries.length === 0) {
     return (
       <p className="text-center text-gray-500">
-        Noch keine Einträge vorhanden.
+    
       </p>
     );
   }
