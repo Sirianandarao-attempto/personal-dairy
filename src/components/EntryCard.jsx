@@ -1,4 +1,9 @@
-function EntryCard({ entry }) {
+function EntryCard({ entry, onSelect }) {
+    const handleDetailsClick = () => {
+        onSelect(entry);
+        document.getElementById("entry_modal").showModal();
+        };
+
   return (
     <div className="card bg-grey shadow-md hover:shadow-xl transition-shadow">
       <figure>
@@ -15,7 +20,9 @@ function EntryCard({ entry }) {
         </p>
         <p className="line-clamp-2">{entry.content}</p>
         <div className="card-actions justify-end">
-          <button className="btn btn-primary">Details</button>
+          <button className="btn btn-primary" onClick={handleDetailsClick}>
+            Details
+            </button>
         </div>
       </div>
     </div>
