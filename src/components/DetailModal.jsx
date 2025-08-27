@@ -1,9 +1,15 @@
 import { useState, useEffect } from "react";
 
-export default function DetailModal({ entry, modalId = "entry_modal", onUpdate, onDelete }) {
+export default function DetailModal({
+  entry,
+  modalId = "entry_modal",
+  onUpdate,
+  onDelete,
+}) {
+  // hydrate fields; support both `imageUrl` (new entries) and `image` (seed data)
   const [title, setTitle] = useState(entry?.title || "");
   const [date, setDate] = useState(entry?.date || "");
-  const [image, setImage] = useState(entry?.image || "");
+  const [image, setImage] = useState(entry?.imageUrl || entry?.image || "");
   const [content, setContent] = useState(entry?.content || "");
 
   const [isEditingTitle, setIsEditingTitle] = useState(false);
@@ -11,29 +17,38 @@ export default function DetailModal({ entry, modalId = "entry_modal", onUpdate, 
   const [isEditingImage, setIsEditingImage] = useState(false);
   const [isEditingContent, setIsEditingContent] = useState(false);
 
-  
+  // keep state in sync when a new entry is selected
   useEffect(() => {
     if (entry) {
-      setTitle(entry.title);
-      setDate(entry.date);
-      setImage(entry.image);
-      setContent(entry.content);
+      setTitle(entry.title || "");
+      setDate(entry.date || "");
+      setImage(entry.imageUrl || entry.image || ""); // <- key alignment
+      setContent(entry.content || "");
     }
   }, [entry]);
 
-  // save
+  // save (keep both keys to stay compatible with other components)
   const saveChanges = () => {
     if (onUpdate) {
-      onUpdate({ ...entry, title, date, image, content });
+      onUpdate({
+        ...entry,
+        title,
+        date,
+        image, // legacy key (seed data)
+        imageUrl: image, // new key (form entries)
+        content,
+      });
     }
-    document.getElementById(modalId).close();
+    const dlg = document.getElementById(modalId);
+    if (dlg?.close) dlg.close();
   };
 
   // delete
   const handleDeleteClick = () => {
     if (entry && onDelete) {
       onDelete(entry.id);
-      document.getElementById(modalId).close();
+      const dlg = document.getElementById(modalId);
+      if (dlg?.close) dlg.close();
     }
   };
 
@@ -43,11 +58,13 @@ export default function DetailModal({ entry, modalId = "entry_modal", onUpdate, 
     <dialog id={modalId} className="modal">
       <div className="modal-box bg-gray-300">
         <form method="dialog">
-          {/* Close Button */}
-          <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+          {/* CLOSE BUTTON */}
+          <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+            ✕
+          </button>
         </form>
 
-        {/* Title */}
+        {/* TITLE */}
         {isEditingTitle ? (
           <input
             className="input input-bordered w-full mb-2 bg-white"
@@ -66,7 +83,7 @@ export default function DetailModal({ entry, modalId = "entry_modal", onUpdate, 
           </h3>
         )}
 
-        {/* Date */}
+        {/* DATE */}
         {isEditingDate ? (
           <input
             type="date"
@@ -79,14 +96,14 @@ export default function DetailModal({ entry, modalId = "entry_modal", onUpdate, 
           />
         ) : (
           <p
-            className="text-sm text-gray-500 mb-4 cursor-pointer"
+            className="text-sm text-gray-600 mb-4 cursor-pointer"
             onDoubleClick={() => setIsEditingDate(true)}
           >
-            {new Date(date).toLocaleDateString("de-DE")}
+            {date ? new Date(date).toLocaleDateString("de-DE") : ""}
           </p>
         )}
 
-        {/* Image */}
+        {/* IMAGE (double-click to edit) */}
         {isEditingImage ? (
           <input
             type="text"
@@ -100,13 +117,17 @@ export default function DetailModal({ entry, modalId = "entry_modal", onUpdate, 
         ) : (
           <img
             src={image}
-            alt={title}
-            className="mb-4 rounded-lg cursor-pointer"
+            alt={title || "entry image"}
+            className="mb-4 rounded-lg cursor-pointer w-full h-64 object-cover"
             onDoubleClick={() => setIsEditingImage(true)}
+            // fallback if the URL is invalid or hotlink is blocked
+            onError={(e) => {
+              e.currentTarget.src = "https://picsum.photos/800/450?blur=2";
+            }}
           />
         )}
 
-        {/* Content */}
+        {/* CONTENT */}
         {isEditingContent ? (
           <textarea
             className="textarea textarea-bordered w-full mb-2 bg-white"
@@ -125,12 +146,20 @@ export default function DetailModal({ entry, modalId = "entry_modal", onUpdate, 
           </p>
         )}
 
-        {/* Buttons */}
-        <div className="mt-4 flex justify-between ">
-          <button type="button" className="btn bg-red-500 text-white border-red-500" onClick={handleDeleteClick}>
+        {/* ACTIONS */}
+        <div className="mt-4 flex justify-between">
+          <button
+            type="button"
+            className="btn bg-red-500 text-white border-red-500"
+            onClick={handleDeleteClick}
+          >
             Delete
           </button>
-          <button type="button" className="btn btn-primary" onClick={saveChanges}>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={saveChanges}
+          >
             Save
           </button>
         </div>
