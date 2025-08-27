@@ -18,7 +18,6 @@ function EntryCard({ entry, onSelect }) {
         <p className="text-sm text-gray-500">
           {new Date(entry.date).toLocaleDateString("de-DE")}
         </p>
-        <p className="line-clamp-2">{entry.content}</p>
         <div className="card-actions justify-end">
           <button className="btn btn-primary" onClick={handleDetailsClick}>
             Details
