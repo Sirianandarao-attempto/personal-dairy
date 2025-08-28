@@ -61,7 +61,7 @@ export default function DetailModal({
 
   return (
     <dialog id={modalId} className="modal">
-      <div className="modal-box bg-gray-300">
+      <div className="modal-box bg-[rgb(245,250,252)]">
         <form method="dialog">
           {/* CLOSE BUTTON */}
           <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
