@@ -29,6 +29,7 @@ export default function DetailModal({
 
   // save (keep both keys to stay compatible with other components)
   const saveChanges = () => {
+    
     if (onUpdate) {
       onUpdate({
         ...entry,
@@ -43,6 +44,12 @@ export default function DetailModal({
     if (dlg?.close) dlg.close();
   };
 
+  const modal = document.getElementById(modalId); 
+  if (modal) {
+    modal.close(); 
+    modal.classList.remove("modal-open"); 
+  }
+};
   // delete
   const handleDeleteClick = () => {
     if (entry && onDelete) {
@@ -127,10 +134,10 @@ export default function DetailModal({
           />
         )}
 
-        {/* CONTENT */}
+        {/* Content */}
         {isEditingContent ? (
           <textarea
-            className="textarea textarea-bordered w-full mb-2 bg-white"
+            className="text-gray-700 textarea-bordered w-full h-40"
             value={content}
             onChange={(e) => setContent(e.target.value)}
             onBlur={() => setIsEditingContent(false)}
@@ -139,12 +146,13 @@ export default function DetailModal({
           />
         ) : (
           <p
-            className="text-gray-700 whitespace-pre-line cursor-pointer"
+            className="text-gray-700 whitespace-pre-wrap break-words cursor-pointer"
             onDoubleClick={() => setIsEditingContent(true)}
           >
             {content}
           </p>
         )}
+        
 
         {/* ACTIONS */}
         <div className="mt-4 flex justify-between">

@@ -32,6 +32,7 @@ function EntryCard({ entry, onSelect }) {
           {new Date(entry.date).toLocaleDateString("de-DE")}
         </p>
 
+
         <p className="line-clamp-2">{entry.content}</p>
 
         <div className="card-actions justify-end">
