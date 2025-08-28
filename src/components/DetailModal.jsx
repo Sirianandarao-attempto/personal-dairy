@@ -22,7 +22,7 @@ export default function DetailModal({
     if (entry) {
       setTitle(entry.title || "");
       setDate(entry.date || "");
-      setImage(entry.imageUrl || entry.image || ""); // key alignment
+      setImage(entry.imageUrl || entry.image || "")
       setContent(entry.content || "");
     }
   }, [entry]);
@@ -34,13 +34,17 @@ export default function DetailModal({
         ...entry,
         title,
         date,
-        image, // legacy key (seed data)
-        imageUrl: image, // new key (form entries)
+        image, 
+        imageUrl: image, 
         content,
       });
     }
-    const dlg = document.getElementById(modalId);
-    if (dlg?.close) dlg.close();
+
+    const modal = document.getElementById(modalId);
+    if (modal) {
+      modal.close();
+      modal.classList.remove("modal-open");
+    }
   };
 
   // delete
