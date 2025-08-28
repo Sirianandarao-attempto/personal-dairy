@@ -1,12 +1,16 @@
+import { useState } from "react";
+
+
 function EntryCard({ entry, onSelect }) {
-  // Use either `imageUrl` (new entries) or `image` (seed data)
-  const imgSrc = entry.imageUrl || entry.image || "";
+  
+  // Default-Fallback-URL
+  const fallbackUrl = "https://blog.tengrai.com/wp-content/uploads/2025/03/Mountain-Lake-m-920x518.webp";
+
+  // Bildquelle: zuerst user-geliefertes Bild, sonst Fallback
+  const [imgSrc, setImgSrc] = useState(entry.imageUrl || entry.image || fallbackUrl);
 
   const handleDetailsClick = () => {
-    // notify parent about the selected entry
     onSelect?.(entry);
-
-    // open the dialog imperatively (kept to match teammate's approach)
     const dlg = document.getElementById("entry_modal");
     if (dlg?.showModal) dlg.showModal();
   };
@@ -18,10 +22,7 @@ function EntryCard({ entry, onSelect }) {
           src={imgSrc}
           alt={entry.title || "entry image"}
           className="h-48 w-full object-cover"
-          // Fallback if the provided URL is not a direct image or hotlink is blocked
-          onError={(e) => {
-            e.currentTarget.src = "https://picsum.photos/800/450?blur=2";
-          }}
+          onError={() => setImgSrc(fallbackUrl)} 
         />
       </figure>
 

@@ -20,11 +20,12 @@ export default function AddEntryWindow({ open, onClose, onSave }) {
   async function handleSubmit(e) {
     e.preventDefault();
 
+   // title, date, content are requird Image not
     if (!title.trim() || !date || !content.trim()) {
       setError("Please fill out all fields.");
       return;
     }
-
+    // Transfer of data to onSave, which saves the entry in the state.
     const payload = {
       title: title.trim(),
       date,
