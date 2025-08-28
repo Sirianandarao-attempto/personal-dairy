@@ -51,7 +51,7 @@ export default function App() {
       content: content.trim(),
     };
 
-    // New Entry sorted by date
+    
     setEntries((prev) => sortByDateDesc([newEntry, ...prev]));
     return { ok: true };
   }
