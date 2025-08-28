@@ -22,34 +22,31 @@ export default function DetailModal({
     if (entry) {
       setTitle(entry.title || "");
       setDate(entry.date || "");
-      setImage(entry.imageUrl || entry.image || ""); // <- key alignment
+      setImage(entry.imageUrl || entry.image || "");
       setContent(entry.content || "");
     }
   }, [entry]);
 
   // save (keep both keys to stay compatible with other components)
   const saveChanges = () => {
-    
     if (onUpdate) {
       onUpdate({
         ...entry,
         title,
         date,
-        image, // legacy key (seed data)
-        imageUrl: image, // new key (form entries)
+        image, 
+        imageUrl: image, 
         content,
       });
     }
-    const dlg = document.getElementById(modalId);
-    if (dlg?.close) dlg.close();
+
+    const modal = document.getElementById(modalId);
+    if (modal) {
+      modal.close();
+      modal.classList.remove("modal-open");
+    }
   };
 
-  const modal = document.getElementById(modalId); 
-  if (modal) {
-    modal.close(); 
-    modal.classList.remove("modal-open"); 
-  }
-};
   // delete
   const handleDeleteClick = () => {
     if (entry && onDelete) {
@@ -134,7 +131,7 @@ export default function DetailModal({
           />
         )}
 
-        {/* Content */}
+        {/* CONTENT */}
         {isEditingContent ? (
           <textarea
             className="text-gray-700 textarea-bordered w-full h-40"
@@ -152,7 +149,6 @@ export default function DetailModal({
             {content}
           </p>
         )}
-        
 
         {/* ACTIONS */}
         <div className="mt-4 flex justify-between">
