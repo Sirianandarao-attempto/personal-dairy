@@ -1,3 +1,4 @@
+
 export default function AddEntryButton({ onClick }) {
   return (
     <button
