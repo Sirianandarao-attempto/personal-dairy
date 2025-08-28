@@ -22,14 +22,13 @@ export default function DetailModal({
     if (entry) {
       setTitle(entry.title || "");
       setDate(entry.date || "");
-      setImage(entry.imageUrl || entry.image || ""); // <- key alignment
+      setImage(entry.imageUrl || entry.image || ""); // key alignment
       setContent(entry.content || "");
     }
   }, [entry]);
 
   // save (keep both keys to stay compatible with other components)
   const saveChanges = () => {
-    
     if (onUpdate) {
       onUpdate({
         ...entry,
@@ -44,12 +43,6 @@ export default function DetailModal({
     if (dlg?.close) dlg.close();
   };
 
-  const modal = document.getElementById(modalId); 
-  if (modal) {
-    modal.close(); 
-    modal.classList.remove("modal-open"); 
-  }
-};
   // delete
   const handleDeleteClick = () => {
     if (entry && onDelete) {
@@ -59,6 +52,7 @@ export default function DetailModal({
     }
   };
 
+  // safety: if there's no entry, render nothing
   if (!entry) return null;
 
   return (
@@ -71,7 +65,7 @@ export default function DetailModal({
           </button>
         </form>
 
-        {/* TITLE */}
+        {/* TITLE (double-click to edit) */}
         {isEditingTitle ? (
           <input
             className="input input-bordered w-full mb-2 bg-white"
@@ -110,7 +104,7 @@ export default function DetailModal({
           </p>
         )}
 
-        {/* IMAGE (double-click to edit) */}
+        {/* IMAGE */}
         {isEditingImage ? (
           <input
             type="text"
@@ -127,17 +121,17 @@ export default function DetailModal({
             alt={title || "entry image"}
             className="mb-4 rounded-lg cursor-pointer w-full h-64 object-cover"
             onDoubleClick={() => setIsEditingImage(true)}
-            // fallback if the URL is invalid or hotlink is blocked
             onError={(e) => {
+              // fallback if the URL is invalid or hotlink is blocked
               e.currentTarget.src = "https://picsum.photos/800/450?blur=2";
             }}
           />
         )}
 
-        {/* Content */}
+        {/* CONTENT */}
         {isEditingContent ? (
           <textarea
-            className="text-gray-700 textarea-bordered w-full h-40"
+            className="textarea textarea-bordered w-full h-40 bg-white"
             value={content}
             onChange={(e) => setContent(e.target.value)}
             onBlur={() => setIsEditingContent(false)}
@@ -152,7 +146,6 @@ export default function DetailModal({
             {content}
           </p>
         )}
-        
 
         {/* ACTIONS */}
         <div className="mt-4 flex justify-between">
