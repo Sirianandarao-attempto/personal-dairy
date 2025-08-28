@@ -25,7 +25,7 @@ function EntryCard({ entry, onSelect }) {
         />
       </figure>
 
-      <div className="card-body">
+      <div className="card-body bg-[rgb(245,250,252)]">
         <h2 className="card-title">{entry.title}</h2>
 
         <p className="text-sm text-gray-500">
